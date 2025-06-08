@@ -1,0 +1,93 @@
+In JavaScript, calling the super method in a subclass is necessary to properly inherit and initialize properties from the parent class. Here’s why it's needed:
+
+1. Accessing the Parent Class Constructor (super())
+When you extend a class in JavaScript, the child class must call super() before using this inside its constructor. This ensures that the parent class is initialized properly.
+
+Example (Without super())
+javascript
+Copy code
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    // Without super(), this will cause an error
+    this.breed = breed; 
+  }
+}
+
+const dog = new Dog("Buddy", "Labrador"); 
+// ❌ Uncaught ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+✅ Fix: Call super() first
+
+javascript
+Copy code
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name); // Calls the parent class constructor
+    this.breed = breed; 
+  }
+}
+
+const dog = new Dog("Buddy", "Labrador"); 
+console.log(dog.name);  // ✅ Buddy
+console.log(dog.breed); // ✅ Labrador
+super(name) ensures the Animal class's constructor runs first.
+It prevents errors and correctly initializes this.
+2. Calling Parent Class Methods (super.method())
+You can also use super.methodName() to call a method from the parent class.
+
+Example: Overriding a Method
+javascript
+Copy code
+class Animal {
+  speak() {
+    console.log("Animal makes a sound");
+  }
+}
+
+class Dog extends Animal {
+  speak() {
+    super.speak(); // Calls the parent class method
+    console.log("Dog barks");
+  }
+}
+
+const dog = new Dog();
+dog.speak();  
+// Output:
+// Animal makes a sound
+// Dog barks
+super.speak() calls the speak() method from Animal before running Dog’s version.
+3. Avoiding Code Duplication
+Using super() helps avoid rewriting logic that is already in the parent class.
+
+Example: Without super() (Redundant Code)
+javascript
+Copy code
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    this.name = name; // Rewriting parent logic ❌
+    this.breed = breed;
+  }
+}
+✅ With super()
+
+javascript
+Copy code
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name); // No need to redefine `this.name`
+    this.breed = breed;
+  }
+}
+super() ensures the parent class logic is reused efficiently.
